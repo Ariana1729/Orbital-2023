@@ -1,12 +1,11 @@
-from flask import Flask, request, redirect, render_template_string, render_template
+from flask import Flask, request, redirect, render_template_string, render_template, json
 from markupsafe import escape
 
-if False:
-    import pymongo
-    client = pymongo.MongoClient("mongodb://localhost:27017/")
-    db = client["vuln"]
-    users = db["users"]
-    notes = db["notes"]
+import pymongo
+client = pymongo.MongoClient("mongodb://localhost:27017/")
+db = client["vuln"]
+users = db["users"]
+notes = db["notes"]
 
 app = Flask(__name__,template_folder="templates")
 
@@ -79,11 +78,30 @@ def SSTI():
 @app.route("/register/", methods=["GET","POST"])
 def register():
     if request.method == "GET":
-        return render_template("register.html")
+        return render_template("register.html",error="")
+    if request.is_json:
+        request.form = request.json
     username = request.form.get("username")
     password = request.form.get("password")
     print(username,password)
-    return render_template("register.html")
+    if db.users.find_one({"username":username}):
+        return render_template("register.html",error="Username already exists")
+    db.users.insert_one({"username":username, "password":password})
+    return render_template("register_success.html",username=username)
+
+@app.route("/login/", methods=["GET","POST"])
+def login():
+    if request.method == "GET":
+        return render_template("login.html",error="")
+    if request.is_json:
+        request.form = request.json
+    username = request.form.get("username")
+    password = request.form.get("password")
+    print(username,password)
+    if db.users.find_one({"username":username, "password":password}):
+        return render_template("login_success.html")
+    return render_template("login.html",error="Username or password is incorrect")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
+    app.run(debug=True,host='0.0.0.0') # this exposes the server!
