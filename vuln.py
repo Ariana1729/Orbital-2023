@@ -1,4 +1,5 @@
-from flask import Flask, request, redirect, render_template_string, escape
+from flask import Flask, request, redirect, render_template_string
+from markupsafe import escape
 
 app = Flask(__name__)
 
@@ -47,6 +48,8 @@ def XSSsafe1():
 def XSS2():
     sanitize = lambda s:s.replace("<","&lt;").replace(">","&gt;")
     style = request.args.get('style', None)
+    if style is None:
+        return redirect("?style=background%23fe9810")
     return f'''<html>
         <body>
             <div style="{sanitize(style)}">
@@ -54,6 +57,17 @@ def XSS2():
             </div>
         </body>
     </html>'''
+
+@app.route('/SSTI/')
+def SSTI():
+    name = request.args.get('name', None)
+    if name is None:
+        return redirect("?name=John Smith")
+    return render_template_string(f'''<html>
+        <body>
+            <p>Hello, {name}!</p>
+        </body>
+    </html>''')
 
 if __name__ == '__main__':
     app.run(debug=True)
