@@ -1,9 +1,14 @@
 from flask import Flask, request, redirect, render_template_string
-import pymongo
 from markupsafe import escape
 
+if False:
+    import pymongo
+    client = pymongo.MongoClient("mongodb://localhost:27017/")
+    db = client["vuln"]
+    users = db["users"]
+    notes = db["notes"]
+
 app = Flask(__name__)
-pymongo.MongoClient("mongodb://localhost:27017/")
 
 @app.route('/')
 def home():
@@ -71,8 +76,15 @@ def SSTI():
         </body>
     </html>''')
 
-@app.route("/register/")
+@app.route("/register/", methods=["GET","POST"])
 def register():
+    if request.method == "GET":
+        return render_template("register.html")
+    username = request.args.get("username")
+    password = request.args.get("password")
+    print(username,password)
+    return render_template("register.html")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
