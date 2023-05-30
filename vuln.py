@@ -1,7 +1,9 @@
 from flask import Flask, request, redirect, render_template_string
+import pymongo
 from markupsafe import escape
 
 app = Flask(__name__)
+pymongo.MongoClient("mongodb://localhost:27017/")
 
 @app.route('/')
 def home():
@@ -68,6 +70,9 @@ def SSTI():
             <p>Hello, {name}!</p>
         </body>
     </html>''')
+
+@app.route("/register/")
+def register():
 
 if __name__ == '__main__':
     app.run(debug=True)
