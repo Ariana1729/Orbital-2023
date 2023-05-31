@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Notes</title>
+</head>
+<body>
+	<h1>Notes</h1>
+	<form action="/notes" method="GET">
+	<input type="text" name="search" placeholder="Search keyword">
+	<button type="submit">Search</button>
+	</form>
+	<ul>
+		{% for note in notes %}
+			<a href="/read_note/?id={{ note.id }}">{{ note.author }}: {{ note.title }}</a>
+		{% endfor %}
+	</ul>
+</body>
+</html>
+

@@ -84,9 +84,9 @@ def register():
     username = request.form.get("username")
     password = request.form.get("password")
     print(username,password)
-    if db.users.find_one({"username":username}):
+    if users.find_one({"username":username}):
         return render_template("register.html",error="Username already exists")
-    db.users.insert_one({"username":username, "password":password})
+    users.insert_one({"username":username, "password":password})
     return render_template("register_success.html",username=username)
 
 @app.route("/login/", methods=["GET","POST"])
@@ -101,6 +101,27 @@ def login():
     if db.users.find_one({"username":username, "password":password}):
         return render_template("login_success.html")
     return render_template("login.html",error="Username or password is incorrect")
+
+@app.route("/notes/")
+def list_notes():
+    search = request.args.get('search', None)
+    query = {"public": True}
+    if search is not None:
+        query["title"] = {'$regex': f'.*{search}.*', '$options': 'i'}
+    nls = [i for i in notes.find(query)]
+    return render_template('list_notes.html', notes=nls)
+
+@app.route("/read_note/")
+def read_note():
+    nid = request.args.get('id', None)
+    if nid is None:
+        return redirect("/notes/")
+    try:
+        nid = int(nid)
+    except:
+        return redirect("/notes/")
+    note = notes.find_one({"id":nid})
+    return render_template('note.html', note=note)
 
 if __name__ == '__main__':
     #app.run(debug=True)
