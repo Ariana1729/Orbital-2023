@@ -46,7 +46,9 @@
 </head>
 <body>
     <h2>User Registration</h2>
-    <h3><strong>{{ error }}</strong></h3>
+    {% if error %}
+        <h3><strong>{{ error }}</strong></h3>
+    {% endif %}
     <form action="/register/" method="POST">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br><br>

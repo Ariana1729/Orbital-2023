@@ -1,55 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Notes</title>
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			margin: 20px;
-		}
-		h1 {
-			text-align: center;
-		}
-		form {
-			margin-bottom: 20px;
-			text-align: center;
-		}
-		input[type="text"] {
-			padding: 5px;
-			width: 200px;
-		}
-		button {
-			padding: 5px 10px;
-		}
-		ul {
-			list-style-type: none;
-			padding: 0;
-		}
-		a {
-			display: block;
-			margin-bottom: 10px;
-			padding: 10px;
-			background-color: #f2f2f2;
-			border-radius: 5px;
-			text-decoration: none;
-			color: #333;
-			transition: background-color 0.2s;
-		}
-		a:hover {
-			background-color: #e6e6e6;
-		}
-	</style>
+    <title>Notes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 5px;
+            width: 200px;
+        }
+        button {
+            padding: 5px 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        a {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.2s;
+        }
+        a:hover {
+            background-color: #e6e6e6;
+        }
+        .add-note-link {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-	<h1>Notes</h1>
-	<form action="/notes" method="GET">
-		<input type="text" name="search" placeholder="Search keyword">
-		<button type="submit">Search</button>
-	</form>
-	<ul>
-		{% for note in notes %}
-			<a href="/read_note/?id={{ note.id }}">{{ note.author }}: {{ note.title }}</a>
-		{% endfor %}
-	</ul>
+    <h1>Notes</h1>
+    <form action="/notes" method="GET">
+        <input type="text" name="search" placeholder="Search keyword">
+        <button type="submit">Search</button>
+    </form>
+    <ul>
+        {% for note in notes %}
+            <a href="/read_note/?id={{ note.id }}">{{ note.author }}: {{ note.title }}</a>
+        {% endfor %}
+    </ul>
+    <div class="add-note-link">
+        <a href="/add_note">Add Your Own Note</a>
+    </div>
 </body>
 </html>

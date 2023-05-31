@@ -6,6 +6,7 @@ client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = client["vuln"]
 users = db["users"]
 notes = db["notes"]
+note_count = notes.count_documents({})
 
 app = Flask(__name__,template_folder="templates")
 
@@ -122,6 +123,23 @@ def read_note():
         return redirect("/notes/")
     note = notes.find_one({"id":nid})
     return render_template('note.html', note=note)
+
+@app.route('/add_note', methods=['GET', 'POST'])
+def add_note():
+    if request.method == 'GET':
+        return render_template('add_note.html', message="")
+    elif request.method == 'POST':
+        global note_count
+        data = request.form
+        note_count += 1
+        db.notes.insert_one({
+            'id': note_count,
+            'author': data['author'],
+            'public': bool(data['public']),
+            'title': data['title'],
+            'desc': data['desc']
+        })
+        return render_template('add_note.html', message='Note added successfully')
 
 if __name__ == '__main__':
     #app.run(debug=True)
