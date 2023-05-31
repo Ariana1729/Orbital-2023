@@ -1,48 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Note Details</title>
-<style>
-body {
-font-family: Arial, sans-serif;
-margin: 20px;
-}
-h1 {
-text-align: center;
-}
-.note {
-margin-bottom: 20px;
-padding: 10px;
-border: 1px solid #ccc;
-border-radius: 5px;
-}
-.note p {
-margin-bottom: 10px;
-}
-.note .author {
-font-weight: bold;
-}
-.note .privacy-public {
-font-style: italic;
-color: green;
-}
-.note .privacy-private {
-font-style: italic;
-color: red;
-}
-</style>
+	<title>Note Details</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 20px;
+		}
+		h1 {
+			text-align: center;
+		}
+		.note {
+			margin-bottom: 20px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+		}
+		.note p {
+			margin-bottom: 10px;
+		}
+		.note .title {
+			font-size: 18px;
+			font-weight: bold;
+			margin-bottom: 10px;
+		}
+		.note .author {
+			font-weight: bold;
+		}
+		.note .privacy-public {
+			font-style: italic;
+			color: green;
+		}
+		.note .privacy-private {
+			font-style: italic;
+			color: red;
+		}
+	</style>
 </head>
 <body>
-<h1>Note Details</h1>
-<div class="note">
-<p>User: <span class="author">{{ note.author }}</span></p>
-{% if note.public %}
-<p>Privacy: <span class="privacy-public">Public</span></p>
-{% else %}
-<p>Privacy: <span class="privacy-private">Private</span></p>
-{% endif %}
-<p>Note: {{ note.desc }}</p>
-</div>
+	<h1>Note Details</h1>
+	<div class="note">
+		<p class="title">{{ note.title }}</p>
+		<p>User: <span class="author">{{ note.author }}</span></p>
+		{% if note.public %}
+			<p>Visibility: <span class="privacy-public">Public</span></p>
+		{% else %}
+			<p>Visibility: <span class="privacy-private">Private</span></p>
+		{% endif %}
+		<p>Note: {{ note.desc }}</p>
+	</div>
 </body>
 </html>
-
