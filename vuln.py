@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template_string, render_template, json
+from flask import Flask, request, redirect, render_template_string, render_template, json, make_response
 from markupsafe import escape
 
 import pymongo
@@ -100,13 +100,29 @@ def login():
     password = request.form.get("password")
     print(username,password)
     if db.users.find_one({"username":username, "password":password}):
-        return render_template("login_success.html")
+        response = make_response(render_template("login_success.html"))
+        response.set_cookie("username", username)
+        return response
+
     return render_template("login.html",error="Username or password is incorrect")
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    response = make_response(redirect('/login'))
+    response.set_cookie('username', '', expires=0)
+    return response
 
 @app.route("/notes/")
 def list_notes():
     search = request.args.get('search', None)
-    query = {"public": True}
+    username = request.cookies.get("username", None)
+    if username:
+        query = {"$or": [
+            {"author": username},
+            {"public": True}
+        ]}
+    else:
+        query = {"public": True}
     if search is not None:
         query["title"] = {'$regex': f'.*{search}.*', '$options': 'i'}
     nls = [i for i in notes.find(query)]
@@ -124,8 +140,11 @@ def read_note():
     note = notes.find_one({"id":nid})
     return render_template('note.html', note=note)
 
-@app.route('/add_note', methods=['GET', 'POST'])
+@app.route("/add_note/", methods=['GET', 'POST'])
 def add_note():
+    username = request.cookies.get("username", None)
+    if username is None:
+        return redirect("/login")
     if request.method == 'GET':
         return render_template('add_note.html', message="")
     elif request.method == 'POST':
@@ -134,8 +153,8 @@ def add_note():
         note_count += 1
         db.notes.insert_one({
             'id': note_count,
-            'author': data['author'],
-            'public': bool(data['public']),
+            'author': username,
+            'public': bool(data.get('public')),
             'title': data['title'],
             'desc': data['desc']
         })
