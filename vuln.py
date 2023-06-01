@@ -90,23 +90,36 @@ def register():
     users.insert_one({"username":username, "password":password})
     return render_template("register_success.html",username=username)
 
+@app.route('/change_pw/', methods=['GET'])
+def change_pw():
+    username = request.cookies.get("username", None)
+    if username is None:
+        return redirect("/login")
+    if request.method == "GET":
+        return render_template("change_pw.html",success=False)
+    password = request.form.get("password")
+    users.update_one({'username': username}, {'$set': {'password': password}})
+    return render_template("change_pw.html",success=True)
+
 @app.route("/login/", methods=["GET","POST"])
 def login():
     if request.method == "GET":
         return render_template("login.html",error="")
     if request.is_json:
-        request.form = request.json
+        request.form = request.json # Express.js does this by default!
     username = request.form.get("username")
     password = request.form.get("password")
-    print(username,password)
-    if db.users.find_one({"username":username, "password":password}):
+    if db.users.find_one({
+        "username":username,
+        "password":password
+    }):
         response = make_response(render_template("login_success.html"))
         response.set_cookie("username", username)
         return response
 
     return render_template("login.html",error="Username or password is incorrect")
 
-@app.route('/logout', methods=['GET'])
+@app.route('/logout/', methods=['GET'])
 def logout():
     response = make_response(redirect('/login'))
     response.set_cookie('username', '', expires=0)
