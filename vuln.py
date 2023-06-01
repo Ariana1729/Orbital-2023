@@ -2,7 +2,7 @@ from flask import Flask, request, redirect, render_template_string, render_templ
 from markupsafe import escape
 
 import pymongo
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+client = pymongo.MongoClient("mongodb://mongodb:27017/")
 db = client["vuln"]
 users = db["users"]
 notes = db["notes"]

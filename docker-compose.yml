@@ -1,0 +1,13 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+  app:
+    build:
+      context: .
+    depends_on:
+      - mongodb
+    ports:
+      - 5000:5000
