@@ -84,7 +84,6 @@ def register():
         request.form = request.json
     username = request.form.get("username")
     password = request.form.get("password")
-    print(username,password)
     if users.find_one({"username":username}):
         return render_template("register.html",error="Username already exists")
     users.insert_one({"username":username, "password":password})
@@ -175,5 +174,4 @@ def add_note():
         return render_template('add_note.html', message='Note added successfully')
 
 if __name__ == '__main__':
-    #app.run(debug=True)
-    app.run(debug=True,host='0.0.0.0') # this exposes the server!
+    app.run(host='0.0.0.0')

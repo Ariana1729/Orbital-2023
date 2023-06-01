@@ -11,6 +11,5 @@ RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
-# Start MongoDB, run setup.py, and then run app.py
 CMD ["sh", "-c", "python setup.py && python vuln.py"]
 

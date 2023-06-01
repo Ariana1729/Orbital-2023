@@ -1,6 +1,6 @@
 import pymongo
 
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+client = pymongo.MongoClient("mongodb://mongodb:27017/")
 db = client["vuln"]
 users = db["users"]
 notes = db["notes"]
