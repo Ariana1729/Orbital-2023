@@ -49,7 +49,20 @@ def XSS2():
         return redirect("?style=background:%23fe9810")
     return f'''<html>
         <body>
-            <div style="{sanitize(style)}">
+            <div style={sanitize(style)}>
+                <p>Your input is sanitized :)</p>
+            </div>
+        </body>
+    </html>'''
+
+@app.route('/XSS3/')
+def XSS3():
+    style = request.args.get('style', None)
+    if style is None:
+        return redirect("?style=background:%23fe9810")
+    return f'''<html>
+        <body>
+            <div style={escape(style)}>
                 <p>Your input is sanitized :)</p>
             </div>
         </body>
@@ -62,7 +75,7 @@ def SSTI():
         return redirect("?name=John Smith")
     return render_template_string(f'''<html>
         <body>
-            <p>Hello, {name}!</p>
+            <p>Hello, {escape(name)}!</p>
         </body>
     </html>''')
 
