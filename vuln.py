@@ -90,15 +90,16 @@ def register():
     users.insert_one({"username":username, "password":password})
     return render_template("register_success.html",username=username)
 
-@app.route('/change_pw/', methods=['GET'])
+@app.route('/change_pw/', methods=["GET","POST"])
 def change_pw():
     username = request.cookies.get("username", None)
     if username is None:
-        return redirect("/login")
+        return redirect("/login/")
     if request.method == "GET":
         return render_template("change_pw.html",success=False)
     password = request.form.get("password")
-    users.update_one({'username': username}, {'$set': {'password': password}})
+    users.update_one({'username': username}, 
+                     {'$set': {'password': password}})
     return render_template("change_pw.html",success=True)
 
 @app.route("/login/", methods=["GET","POST"])

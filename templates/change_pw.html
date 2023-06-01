@@ -36,7 +36,7 @@
     {% if success %}
         <p>Password changed successfully!</p>
     {% endif %}
-    <form action="/change_pw" method="POST">
+    <form action="/change_pw/" method="POST">
         <label for="password">New Password:</label>
         <input type="password" id="password" name="password" required><br><br>
         <button type="submit">Change Password</button>
