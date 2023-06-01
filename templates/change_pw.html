@@ -7,16 +7,32 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        h1 {
-            text-align: center;
-        }
-        p {
+        p.info {
             text-align: center;
             color: green;
         }
         form {
             margin-top: 20px;
             text-align: center;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .header .nav-links a {
+            margin-right: 10px;
+            text-decoration: none;
+        }
+        .user-info {
+            font-size: 14px;
         }
         label {
             display: block;
@@ -32,14 +48,31 @@
     </style>
 </head>
 <body>
-    <h1>Change Password</h1>
     {% if success %}
-        <p>Password changed successfully!</p>
+        <div class="header">
+            <h1>Change Password Success</h1>
+            <div class="nav-links">
+                <a href="/notes">Notes</a>
+                <a href="/login">Sign in</a>
+            </div>
+        </div>
+        <p class="info">Password changed successfully!</p>
+        <p class="info"><a href="/login">Sign in</a> here</p>
+    {% else %}
+        <div class="header">
+            <h1>Change Password</h1>
+            <div class="nav-links">
+                <a href="/notes">Notes</a>
+                <a href="/add_note">Add a note</a>
+                <a href="/logout">Logout</a>
+            </div>
+                <p class="user-info">Signed in as: {{ username }}</p>
+        </div>
+        <form action="/change_pw/" method="POST">
+            <label for="password">New Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <button type="submit">Change Password</button>
+        </form>
     {% endif %}
-    <form action="/change_pw/" method="POST">
-        <label for="password">New Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">Change Password</button>
-    </form>
 </body>
 </html>

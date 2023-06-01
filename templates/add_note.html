@@ -7,12 +7,28 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        h1 {
-            text-align: center;
-        }
         form {
             margin-bottom: 20px;
             text-align: center;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .header .nav-links a {
+            margin-right: 10px;
+            text-decoration: none;
+        }
+        .user-info {
+            font-size: 14px;
         }
         input[type="text"], textarea {
             padding: 5px;
@@ -27,10 +43,24 @@
         button[type="submit"] {
             padding: 5px 10px;
         }
+        .success-message {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            color: green;
+        }
     </style>
 </head>
 <body>
-    <h1>Add Note</h1>
+    <div class="header">
+        <h1>Add Note</h1>
+        <div class="nav-links">
+            <a href="/notes">Notes</a>
+            <a href="/change_pw">Change Password</a>
+            <a href="/logout">Logout</a>
+        </div>
+        <p class="user-info">Signed in as: {{ username }}</p>
+    </div>
     <form action="/add_note" method="POST">
         <label for="public">Public:</label>
         <input type="checkbox" name="public">

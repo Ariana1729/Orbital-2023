@@ -7,9 +7,6 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        h1 {
-            text-align: center;
-        }
         form {
             margin-bottom: 20px;
             text-align: center;
@@ -24,10 +21,13 @@
         ul {
             list-style-type: none;
             padding: 0;
+            margin: 0;
         }
-        a {
-            display: block;
+        li {
             margin-bottom: 10px;
+        }
+        .note-link a {
+            display: block;
             padding: 10px;
             background-color: #f2f2f2;
             border-radius: 5px;
@@ -35,28 +35,59 @@
             color: #333;
             transition: background-color 0.2s;
         }
-        a:hover {
+        .note-link a:hover {
             background-color: #e6e6e6;
         }
-        .add-note-link {
-            text-align: center;
-            margin-bottom: 10px;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .header .nav-links a {
+            margin-right: 10px;
+            text-decoration: none;
+        }
+        .user-info {
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <h1>Notes</h1>
-    <form action="/notes" method="GET">
-        <input type="text" name="search" placeholder="Search keyword">
-        <button type="submit">Search</button>
-    </form>
-    <ul>
-        {% for note in notes %}
-            <a href="/read_note/?id={{ note.id }}">{{ note.author }}: {{ note.title }}</a>
-        {% endfor %}
-    </ul>
-    <div class="add-note-link">
-        <a href="/add_note">Add Your Own Note</a>
+    <div class="header">
+        <h1>Notes</h1>
+        {% if username %}
+            <div class="nav-links">
+                <a href="/add_note">Add a note</a>
+                <a href="/change_pw">Change Password</a>
+                <a href="/logout">Logout</a>
+            </div>
+            <p class="user-info">Signed in as: {{ username }}</p>
+        {% else %}
+            <div class="nav-links">
+                <a href="/login">Login</a>
+            </div>
+        {% endif %}
+    </div>
+    <div class="container">
+        <div class="content">
+            <h2>List of Notes</h2>
+            <form action="/notes" method="GET">
+                <input type="text" name="search" placeholder="Search keyword">
+                <button type="submit">Search</button>
+            </form>
+            <ul>
+                {% for note in notes %}
+                    <li class="note-link"><a href="/read_note/?id={{ note.id }}">{{ note.author }}: {{ note.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 </body>
 </html>

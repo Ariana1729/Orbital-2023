@@ -12,17 +12,7 @@ app = Flask(__name__,template_folder="templates")
 
 @app.route('/')
 def home():
-    routes = []
-    html_response = '<html><body>'
-    html_response += '<h1>List of Routes:</h1>'
-    html_response += '<ul>'
-    for rule in app.url_map.iter_rules():
-        if rule.endpoint == 'static': continue
-        html_response += f'<li><a href="{rule.rule}">{rule.rule}</a></li>'
-    html_response += '</ul>'
-    html_response += '</body></html>'
-
-    return html_response
+    return render_template('routes.html', app=app)
 
 @app.route('/XSS1/')
 def XSS1():
@@ -56,7 +46,7 @@ def XSS2():
     sanitize = lambda s:s.replace("<","&lt;").replace(">","&gt;")
     style = request.args.get('style', None)
     if style is None:
-        return redirect("?style=background%23fe9810")
+        return redirect("?style=background:%23fe9810")
     return f'''<html>
         <body>
             <div style="{sanitize(style)}">
@@ -95,11 +85,13 @@ def change_pw():
     if username is None:
         return redirect("/login/")
     if request.method == "GET":
-        return render_template("change_pw.html",success=False)
+        return render_template("change_pw.html",success=False,username=username)
     password = request.form.get("password")
     users.update_one({'username': username}, 
                      {'$set': {'password': password}})
-    return render_template("change_pw.html",success=True)
+    response = make_response(render_template("change_pw.html",success=True))
+    response.set_cookie('username', '', expires=0)
+    return response
 
 @app.route("/login/", methods=["GET","POST"])
 def login():
@@ -139,10 +131,11 @@ def list_notes():
     if search is not None:
         query["title"] = {'$regex': f'.*{search}.*', '$options': 'i'}
     nls = [i for i in notes.find(query)]
-    return render_template('list_notes.html', notes=nls)
+    return render_template('list_notes.html', notes=nls, username=username)
 
 @app.route("/read_note/")
 def read_note():
+    username = request.cookies.get("username", None)
     nid = request.args.get('id', None)
     if nid is None:
         return redirect("/notes/")
@@ -151,7 +144,7 @@ def read_note():
     except:
         return redirect("/notes/")
     note = notes.find_one({"id":nid})
-    return render_template('note.html', note=note)
+    return render_template('note.html', note=note, username=username)
 
 @app.route("/add_note/", methods=['GET', 'POST'])
 def add_note():
@@ -159,7 +152,7 @@ def add_note():
     if username is None:
         return redirect("/login")
     if request.method == 'GET':
-        return render_template('add_note.html', message="")
+        return render_template('add_note.html', message="", username=username)
     elif request.method == 'POST':
         global note_count
         data = request.form
@@ -171,7 +164,7 @@ def add_note():
             'title': data['title'],
             'desc': data['desc']
         })
-        return render_template('add_note.html', message='Note added successfully')
+        return render_template('add_note.html', message='Note added successfully', username=username)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

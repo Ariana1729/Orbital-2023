@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List of Routes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            display: block;
+            padding: 5px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.2s;
+        }
+        a:hover {
+            background-color: #e6e6e6;
+        }
+    </style>
+</head>
+<body>
+    <h1>List of Routes</h1>
+    <ul>
+        {% for rule in app.url_map.iter_rules() %}
+            {% if rule.endpoint != 'static' %}
+                <li><a href="{{ rule.rule }}">{{ rule.rule }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</body>
+</html>
+

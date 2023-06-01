@@ -7,9 +7,6 @@
 			font-family: Arial, sans-serif;
 			margin: 20px;
 		}
-		h1 {
-			text-align: center;
-		}
 		.note {
 			margin-bottom: 20px;
 			padding: 10px;
@@ -35,10 +32,45 @@
 			font-style: italic;
 			color: red;
 		}
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .header .nav-links a {
+            margin-right: 10px;
+            text-decoration: none;
+        }
+        .user-info {
+            font-size: 14px;
+        }
 	</style>
 </head>
 <body>
-	<h1>Note Details</h1>
+    <div class="header">
+        <h1>Note Details</h1>
+        {% if username %}
+            <div class="nav-links">
+                <a href="/notes">Notes</a>
+                <a href="/add_note">Add a note</a>
+                <a href="/change_pw">Change Password</a>
+                <a href="/logout">Logout</a>
+            </div>
+            <p class="user-info">Signed in as: {{ username }}</p>
+        {% else %}
+            <div class="nav-links">
+                <a href="/notes">Notes</a>
+                <a href="/login">Sign in</a>
+            </div>
+        {% endif %}
+    </div>
 	<div class="note">
 		<p class="title">{{ note.title }}</p>
 		<p>User: <span class="author">{{ note.author }}</span></p>
